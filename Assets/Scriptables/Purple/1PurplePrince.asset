@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 1PurplePrince
   m_EditorClassIdentifier: 
   Name: Purple Prince
-  preview: {fileID: 21300000, guid: 3e9c478e096dfe244a5fdc959e2b4573, type: 3}
+  preview: {fileID: 21300000, guid: 3699f9a0f1f05334c9f2441bbacd8283, type: 3}
   color: 1
   rarity: 0

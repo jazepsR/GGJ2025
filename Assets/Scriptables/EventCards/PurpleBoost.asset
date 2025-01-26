@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81537b10f8dd19f45b657c56568f7d63, type: 3}
-  m_Name: 3Apeldoorn
+  m_Script: {fileID: 11500000, guid: 2637335e9a9bd5944ae6509edfb90221, type: 3}
+  m_Name: PurpleBoost
   m_EditorClassIdentifier: 
-  Name: Apeldoorn
-  preview: {fileID: 21300000, guid: 1012da02294610f4fbdbe4ca5017aa33, type: 3}
-  color: 0
-  rarity: 0
+  cardType: 2
+  preview: {fileID: 21300000, guid: 3e9c478e096dfe244a5fdc959e2b4573, type: 3}
+  displayName: Purple Boost
+  description: Increases the demand for purple flowers by one tier

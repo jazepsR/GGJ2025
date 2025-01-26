@@ -27,19 +27,21 @@ public class PriceManager : MonoBehaviour
         for (int i=0;i< sortedTypes.Count;i++)
         {
             GetColorLevelRef(sortedTypes[i].colorType) = GetColorLevel(sortedTypes[i].colorType) + toAdd;
-            if (i != sortedTypes.Count - 1 && sortedTypes[i + 1] != sortedTypes[i])
+            if (i >= sortedTypes.Count-1)
+                break;
+            if(!sortedTypes[i + 1].count.Equals(sortedTypes[i].count))
                 toAdd--;
         }
-        /*foreach (CountType kvp in countTypes)
-        {
-            GetColorLevelRef(kvp.colorType) = GetColorLevel(kvp.colorType) + toAdd;
-           // Debug.Log(kvp.Key + "  " + GetColorLevel(kvp.Key));
-            toAdd++;
-        }*/
         redLevel = Math.Clamp(redLevel, 1, 5);
         yellowLevel = Math.Clamp(yellowLevel, 1, 5);
         purpleLevel = Math.Clamp(purpleLevel, 1, 5);
         Debug.Log("red " + redLevel+ " yellow " + yellowLevel + " purple " + purpleLevel);
+        SetupTierIndicators();
+    }
+
+    public void TogglePriceTier(int changeBy, ColorType colorType)
+    {
+        GetColorLevelRef(colorType) = Mathf.Clamp(GetColorLevel(colorType) + changeBy, 1, 5);
         SetupTierIndicators();
     }
 
@@ -54,11 +56,11 @@ public class PriceManager : MonoBehaviour
         switch(rarity)
         {
             case Rarity.I:
-                return Helpers.GetPriceTierA(GetColorLevel(colorType));
+                return Helpers.GetPriceTierC(GetColorLevel(colorType));
             case Rarity.II:
                 return Helpers.GetPriceTierB(GetColorLevel(colorType));
             case Rarity.III:
-                return Helpers.GetPriceTierC(GetColorLevel(colorType));
+                return Helpers.GetPriceTierA(GetColorLevel(colorType));
             default:
                 return 0;
         }

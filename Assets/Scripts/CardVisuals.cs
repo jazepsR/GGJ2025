@@ -13,18 +13,25 @@ public class CardVisuals : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private Card parent;
     [SerializeField] private Transform followPoint;
     private float lerpSpeed = 5;
+    private CardData cardData;
 
     public void Setup(CardData cardData, Card card)
     {
+        this.cardData = cardData;
         parent = card;
         title.text = cardData.Name;
-        price.text ="GOLD: " +PriceManager.instance.GetPrice(cardData.color, cardData.rarity).ToString();
         rarityText.text = cardData.rarity.ToString();
         preview.sprite = cardData.preview;
         rarityImage.color = Helpers.GetColor(cardData.color);
         overlay.SetActive(false);
         buyBtn.SetActive(true);
         sellBtn.SetActive(false);
+        UpdatePrice();
+    }
+
+    public void UpdatePrice()
+    {
+        price.text = "GOLD: " + PriceManager.instance.GetPrice(cardData.color, cardData.rarity).ToString();
     }
     public Transform GetFollowPoint()
     {
@@ -50,6 +57,7 @@ public class CardVisuals : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void SetBought()
     {
         followPoint.SetParent(BoardManager.instance.hand);
+        transform.SetAsLastSibling();
         overlay.SetActive(false);
         buyBtn.SetActive(false);
         sellBtn.SetActive(true);

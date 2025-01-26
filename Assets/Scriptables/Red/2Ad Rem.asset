@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 2Ad Rem
   m_EditorClassIdentifier: 
   Name: Ad Rem
-  preview: {fileID: 21300000, guid: 5e9eaca0e795e1543b44da6b7848c298, type: 3}
+  preview: {fileID: 21300000, guid: 7760e896831a0f14884a87a274906672, type: 3}
   color: 0
-  rarity: 0
+  rarity: 1

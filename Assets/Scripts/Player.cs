@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
     {
         this.gold = gold;
         this.isLocal = isLocal;
-        if (isLocal)
-            BoardManager.instance.UpdateGold(gold);
+        //if (isLocal)
+        //    BoardManager.instance.UpdateGold(gold);
     }
     // Start is called before the first frame update
     public void ModifyGold(int modifyBy)

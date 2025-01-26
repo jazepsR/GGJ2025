@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private Deck deck;
-    [SerializeField] private Transform currentMarketParent, nextMarketParent;
+    [SerializeField] private Transform currentMarketParent, nextMarketParent, eventCardPoint;
     // Start is called before the first frame update
     private int cardsInMarket = 5;
     [SerializeField] private CardVisuals cardVisuals;
+    [SerializeField] private EventCardVisuals eventCardVisuals;
     [SerializeField] private Transform cardParent;
     private Player localPlayer;
     public static GameManager instance;
     private List<Card> nextMarket;
     private List<CountType> countTypes = new List<CountType>();
+    [SerializeField] int roundNumber = 0;
+    [SerializeField] private float[] crashChance;
 
     void Awake()
     {
@@ -25,7 +29,7 @@ public class GameManager : MonoBehaviour
         deck = GetComponent<Deck>();
         localPlayer = new Player(15, "Player 1", true);
     }
-
+  
     private void SetupCountTypes()
     {
         countTypes.Clear();
@@ -33,6 +37,7 @@ public class GameManager : MonoBehaviour
         countTypes.Add(new CountType(ColorType.Purple, 0));
         countTypes.Add(new CountType(ColorType.Red, 0));
     }
+    
     public void UpdateMarket()
     {
         //clear current market
@@ -68,10 +73,48 @@ public class GameManager : MonoBehaviour
             card.transform.SetParent(currentMarketParent);
             card.SetAsFirstSibling();
         }
-        
+        PlayEventCard();
+
+        //update price visuals
+        foreach(CardVisuals visuals in cardParent.GetComponentsInChildren<CardVisuals>())
+        {
+            visuals.UpdatePrice();
+        }
         //generate next market
         GenerateNextMarket();
+        //update crash chance
+        BoardManager.instance.UpdateCrashChance(crashChance[roundNumber]);
+        if (crashChance[roundNumber] > Random.value)
+            BoardManager.instance.EnableLoseMenu();
+        roundNumber++;
     }
+
+    public void PlayEventCard()
+    {
+        //Setup visuals
+        EventCard eventCard = deck.GetCardFromEventDeck(); 
+        EventCardVisuals visuals = Instantiate(eventCardVisuals, cardParent);
+        visuals.GetFollowPoint().SetParent(eventCardPoint);
+        visuals.GetFollowPoint().transform.localPosition = Vector3.zero;
+        visuals.transform.SetAsLastSibling();
+        visuals.Setup(eventCard.GetEventCardData());
+        // resolve effect
+        switch(eventCard.GetEventCardData().cardType) 
+        {
+            case EventCardType.Yellow:
+                PriceManager.instance.TogglePriceTier(1, ColorType.Yellow);
+                break;
+            case EventCardType.Purple:
+                PriceManager.instance.TogglePriceTier(1, ColorType.Purple);
+                break;
+            case EventCardType.Red:
+                PriceManager.instance.TogglePriceTier(1, ColorType.Red);
+                break;
+            default:
+                break;
+        }
+    }
+
     public bool CanAfford(int cost)
     {
         return localPlayer.GetGold() >= cost;            
@@ -81,6 +124,15 @@ public class GameManager : MonoBehaviour
         return localPlayer;
     }
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void Reset()
+    {
+        SceneManager.LoadScene(1);
+    }
     public void GenerateNextMarket()
     {
         nextMarket = new();
@@ -97,6 +149,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        localPlayer.ModifyGold(0);
         GenerateNextMarket();
         UpdateMarket();
     }
@@ -104,7 +157,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
     }
 }
 
